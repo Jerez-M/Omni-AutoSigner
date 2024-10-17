@@ -1,27 +1,48 @@
-import { Route, Routes } from "react-router-dom";
-import { useState } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Sidebar from "./components/common/Sidebar";
 import OverviewPage from "./pages/admin/OverviewPage";
 import ProductsPage from "./pages/admin/UnsignedDocsPage";
 import UsersPage from "./pages/admin/SignedDocsPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 import Header from "./components/common/Header";
+import "./App.css";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [title, setTitle] = useState("Overview");
+  const location = useLocation();
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case '/':
+        setTitle("Overview");
+        break;
+      case '/unsigned-documents':
+        setTitle("Unsigned Documents");
+        break;
+      case '/signed-documents':
+        setTitle("Signed Documents");
+        break;
+      case '/settings':
+        setTitle("Settings");
+        break;
+      default:
+        setTitle("Overview");
+    }
+  }, [location]);
 
   return (
     <div className='flex h-screen bg-gray-900 text-gray-100'>
-      {/* Background */}
-      <div className='fixed inset-0 z-0'>
-        <div className='absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80' />
-        <div className='absolute inset-0 backdrop-blur-sm' />
-      </div>
-
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-
-      <div className={`flex-1 pt-20 overflow-auto ${isSidebarOpen ? 'ml-0' : 'ml-0'}`}> {/* Adjust for sidebar width */}
-        <Header title="Overview" isSidebarOpen={isSidebarOpen} onProfileClick={() => {}} onLogout={() => {}} username={"JEREMIAH MUCHAZONDIDA"} />
+      <div className={`flex-1 pt-20 overflow-auto scrollable hide-scrollbar ${isSidebarOpen ? 'ml-0' : 'ml-0'}`}>
+        <Header
+          title={title}
+          isSidebarOpen={isSidebarOpen}
+          onProfileClick={() => { }}
+          onLogout={() => { }}
+          username={"JEREMIAH MUCHAZONDIDA"}
+        />
         <Routes>
           <Route path='/' element={<OverviewPage />} />
           <Route path='/unsigned-documents' element={<ProductsPage />} />

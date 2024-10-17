@@ -1,6 +1,8 @@
 import { UserRoundCog } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { useState, useEffect, useRef } from 'react';
+import { motion } from "framer-motion";
+
 
 const Header = ({ title, onProfileClick, onLogout, isSidebarOpen, username }) => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -17,18 +19,16 @@ const Header = ({ title, onProfileClick, onLogout, isSidebarOpen, username }) =>
 	};
 
 	useEffect(() => {
-		// Add event listener for clicks
 		document.addEventListener('mousedown', handleClickOutside);
 
-		// Cleanup function to remove the event listener
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
 
 	return (
-		<header className={`fixed top-0 ${isSidebarOpen ? 'left-64' : 'left-20'} right-0 bg-gray-900 bg-opacity-50 backdrop-blur-md shadow-lg border-b border-gray-700 z-50`}>
-			<div className='max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center'>
+		<motion.div className={`fixed top-0 ${isSidebarOpen ? 'left-64' : 'left-20 transition-all duration-300 ease-in-out'} right-0 bg-gray-900 bg-opacity-50 backdrop-blur-md shadow-lg border-b border-gray-700 z-50`}>
+			<div className={`${isSidebarOpen} ? 'left-0' : 'left-0 max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center`}>
 				<div>
 					<h1 className='text-2xl font-semibold text-gray-100'>Pages / {title}</h1>
 					<nav className='text-gray-200'>{title}</nav>
@@ -65,7 +65,7 @@ const Header = ({ title, onProfileClick, onLogout, isSidebarOpen, username }) =>
 					)}
 				</div>
 			</div>
-		</header>
+		</motion.div>
 	);
 };
 

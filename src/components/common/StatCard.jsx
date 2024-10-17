@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import PropTypes from "prop-types";
 
 const StatCard = ({ name, icon: Icon, value, color }) => {
 	return (
@@ -20,3 +21,9 @@ const StatCard = ({ name, icon: Icon, value, color }) => {
 	);
 };
 export default StatCard;
+StatCard.propTypes = {
+	name: PropTypes.string.isRequired,
+	icon: PropTypes.elementType.isRequired,
+	value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+	color: PropTypes.string.isRequired,
+}

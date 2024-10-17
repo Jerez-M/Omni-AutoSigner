@@ -1,0 +1,23 @@
+::-webkit-scrollbar {
+    width: 0.1rem;
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+/* For Firefox */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(182, 178, 178, 0.3) transparent;
+}
+
+.hide-scrollbar {
+    overflow: hidden; 
+}
+
+.scrollable {
+    overflow-y: auto
+}
