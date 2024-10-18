@@ -45,7 +45,7 @@ const AddUnsignedDoc = () => {
 
         try {
             setLoading(true);
-            const response = await fetch('API_ENDPOINT', {
+            const response = await fetch('http://127.0.0.1:8000/api/v1/contracts/unsigned-contracts/', {
                 method: 'POST',
                 body: formData,
             });
@@ -81,12 +81,13 @@ const AddUnsignedDoc = () => {
                     Upload Document
                 </Button>
                 <Modal
-                    title="Upload Document For Signing"
+                    title={null}
                     footer={null}
                     open={isModalOpen}
                     onCancel={handleCancel}
-                    width={800} 
+                    width={800}
                 >
+                    <h2 className="text-2xl font-bold mb-4">Upload Document for Signing</h2>
                     <Form form={form} name="uploadDocument" layout="vertical" onFinish={handleSubmit} autoComplete="off">
                         <Form.Item
                             name="contract_name"

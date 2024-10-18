@@ -1,8 +1,8 @@
 import { FileCheck, FilePenLine } from "lucide-react";
 import { motion } from "framer-motion";
 
-import StatCard from "../../components/common/StatCard";
-import SignedDocsTable from "../../components/signedDocs/SignedDocsTable";
+import StatCard from "../../../components/common/StatCard";
+import SignedDocsTable from "../../../components/signedDocs/SignedDocsTable";
 
 const SignedDocsPage = () => {
 	return (

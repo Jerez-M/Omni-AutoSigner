@@ -27,7 +27,7 @@ const Header = ({ title, onProfileClick, onLogout, isSidebarOpen, username }) =>
 	}, []);
 
 	return (
-		<motion.div className={`fixed top-0 ${isSidebarOpen ? 'left-64' : 'left-20 transition-all duration-300 ease-in-out'} right-0 bg-gray-900 bg-opacity-50 backdrop-blur-md shadow-lg border-b border-gray-700 z-50`}>
+		<motion.div className={`fixed top-0 ${isSidebarOpen ? 'left-64' : 'left-20 transition-all duration-450 ease-in-out'} right-0 bg-gray-900 bg-opacity-50 backdrop-blur-md shadow-lg border-b border-gray-700 z-50`}>
 			<div className={`${isSidebarOpen} ? 'left-0' : 'left-0 max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center`}>
 				<div>
 					<h1 className='text-2xl font-semibold text-gray-100'>Pages / {title}</h1>

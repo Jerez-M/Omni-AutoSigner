@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import ProductsTable from "../../components/unsignedDocs/UnsignedDocsTable";
+import UnsignedDocsTable from "../../../components/unsignedDocs/UnsignedDocsTable";
 import AddUnsignedDoc from "./AddUnsignedDoc";
 
 const UnsignedDocsPage = () => {
@@ -15,10 +15,9 @@ const UnsignedDocsPage = () => {
 
 				<AddUnsignedDoc />
 
-				<ProductsTable />
+				<UnsignedDocsTable />
 			</motion.div>
 
-			{/* <ProductsTable /> */}
 		</main>
 	);
 };
