@@ -1,8 +1,8 @@
 import instance from "../api";
 
 class UnsignedContract {
-    create(data) {
-        return instance.postForm('contracts/unsigned-contracts/', data)
+    create(formData) {
+        return instance.postForm('contracts/unsigned-contracts/', formData)
     }
 
     get(id) {
@@ -12,8 +12,12 @@ class UnsignedContract {
         return instance.get(`contracts/unsigned-contracts/get-all-by-organisation-id/${organisation_id}/`)
     }
 
-    update(data, id) {
-        return instance.putForm(`contracts/unsigned-contracts/update/${id}`, data)
+    getUnsignedContractsWithSignatures(organisation_id) {
+        return instance.get(`contracts/unsigned-contracts-with-signatures/${organisation_id}/`)
+    }
+
+    update(id, formData) {
+        return instance.putForm(`contracts/unsigned-contracts/update/${id}/`, formData)
     }
 
     delete(id) {

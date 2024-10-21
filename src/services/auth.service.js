@@ -60,9 +60,9 @@ class AuthenticationService {
         return (token?.first_name + " " + token?.last_name).toUpperCase()
     }
 
-    getUserInstitutionId() {
+    getUserOrganisationId() {
         const token = this.decodeToken();
-        return token?.institution;
+        return token?.organisation;
     }
 }
 

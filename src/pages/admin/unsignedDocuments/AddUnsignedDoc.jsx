@@ -1,6 +1,7 @@
 import { Button, Form, Input, Modal, Space, Upload, message, AutoComplete } from 'antd';
 import { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
+import unsignedContractService from '../../../services/unsigned-contract.service';
 
 const documentTypes = [
     'Policy',
@@ -40,16 +41,13 @@ const AddUnsignedDoc = () => {
         if (fileList.length > 0) {
             formData.append('contract_attachment_file', fileList[0].originFileObj);
         }
-        const organisationId = localStorage.getItem('organisationId');
+        const organisationId = 1
         formData.append('organisation', organisationId);
 
         try {
             setLoading(true);
-            const response = await fetch('http://127.0.0.1:8000/api/v1/contracts/unsigned-contracts/', {
-                method: 'POST',
-                body: formData,
-            });
-            if (response.ok) {
+            const response = unsignedContractService.create(formData);
+            if ((await response).status == 201) {
                 message.success('Document uploaded successfully!');
                 handleCancel();
             } else {
@@ -135,8 +133,8 @@ const AddUnsignedDoc = () => {
                                 fileList={fileList}
                                 onChange={handleUploadChange}
                                 beforeUpload={beforeUpload}
-                                showUploadList={true} // Show the file list
-                                style={{ width: '100%' }} // Full width
+                                showUploadList={true}
+                                style={{ width: '100%' }}
                             >
                                 <p className="ant-upload-drag-icon">
                                     <UploadOutlined />

@@ -1,21 +1,18 @@
 import { motion } from "framer-motion";
-import { Edit, Search, Trash2, FileMinus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, FileMinus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
-import { Tooltip, Popconfirm } from 'antd';
-import EditUnsignedDoc from './EditUnsignedDoc';
+import { Tooltip } from 'antd';
 import unsignedContractService from "../../services/unsigned-contract.service";
 import { API_BASE_URL } from "../../apiConfig";
 
-const UnsignedDocsTable = () => {
+const ViewDocument = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredDocuments, setFilteredDocuments] = useState([]);
 	const [documents, setDocuments] = useState([]);
 	const [sortConfig, setSortConfig] = useState({ key: '', direction: 'ascending' });
 	const [hoveredColumn, setHoveredColumn] = useState(null);
 	const [hoveredRow, setHoveredRow] = useState(null);
-	const [selectedDocument, setSelectedDocument] = useState(null);
-	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [documentsPerPage] = useState(10);
 
@@ -76,29 +73,9 @@ const UnsignedDocsTable = () => {
 		setFilteredDocuments(sortedDocuments);
 	};
 
-	const handleEdit = (document) => {
-		setSelectedDocument(document);
-		setIsEditModalOpen(true);
-	};
-
-	const handleCloseEditModal = () => {
-		setIsEditModalOpen(false);
-		setSelectedDocument(null);
-	};
-
 	const handleView = (attachmentFile) => {
 		const url = `${API_BASE_URL}${attachmentFile}`;
 		window.open(url, "_blank");
-	};
-
-	const handleDelete = async (id) => {
-		try {
-			await unsignedContractService.delete(id);
-			setDocuments(documents.filter(doc => doc.id !== id));
-			setFilteredDocuments(filteredDocuments.filter(doc => doc.id !== id));
-		} catch (error) {
-			console.error("Failed to delete document:", error);
-		}
 	};
 
 	// Pagination logic
@@ -122,7 +99,7 @@ const UnsignedDocsTable = () => {
 			transition={{ delay: 0.2 }}
 		>
 			<div className='flex justify-between items-center mb-6'>
-				<h2 className='text-xl font-semibold text-gray-100'>Unsigned Documents List</h2>
+				<h2 className='text-xl font-semibold text-gray-100'>Documents List</h2>
 				<div className='relative'>
 					<input
 						type='text'
@@ -226,27 +203,9 @@ const UnsignedDocsTable = () => {
 										{new Date(document.contract_upload_date).toLocaleDateString()}
 									</td>
 									<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-										<Tooltip color="#108ee9" placement="topRight" title="Edit Document">
-											<button className='text-indigo-400 hover:text-indigo-300 mr-2' onClick={() => handleEdit(document)}>
-												<Edit size={18} />
-											</button>
-										</Tooltip>
-										<Tooltip color="#108ee9" placement="topRight" title="Delete Document">
-											<Popconfirm
-												title="Delete Document"
-												description="Are you sure to delete this document?"
-												onConfirm={() => handleDelete(document.id)}
-												okText="Yes"
-												cancelText="No"
-											>
-												<button className='text-red-400 hover:text-red-300 mr-2'>
-													<Trash2 size={18} />
-												</button>
-											</Popconfirm>
-										</Tooltip>
 										<Tooltip color="#108ee9" placement="topRight" title="View Document">
-											<button className='text-green-400 hover:text-green-200' onClick={() => handleView(document.contract_attachment_file)}>
-												<Eye size={18} />
+											<button className='text-green-400 hover:text-green-200 mr-2' onClick={() => handleView(document.contract_attachment_file)}>
+												<Eye size={19} />
 											</button>
 										</Tooltip>
 									</td>
@@ -290,14 +249,8 @@ const UnsignedDocsTable = () => {
 					</button>
 				</div>
 			</div>
-
-			<EditUnsignedDoc
-				isModalOpen={isEditModalOpen}
-				handleClose={handleCloseEditModal}
-				document={selectedDocument}
-			/>
 		</motion.div>
 	);
 };
 
-export default UnsignedDocsTable;
+export default ViewDocument;

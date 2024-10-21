@@ -2,11 +2,13 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Sidebar from "./components/common/Sidebar";
 import OverviewPage from "./pages/admin/OverviewPage";
-import ProductsPage from "./pages/admin/unsignedDocuments/UnsignedDocsPage";
+import UnsignedDocsPage from "./pages/admin/unsignedDocuments/UnsignedDocsPage";
 import UsersPage from "./pages/admin/signedDocuments/SignedDocsPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 import Header from "./components/common/Header";
 import "./App.css";
+import SignedEmployees from "./pages/admin/signedDocuments/SignedEmployeesPage";
+import ViewDocuments from "./pages/user/ViewDocument";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -15,7 +17,7 @@ function App() {
 
   useEffect(() => {
     switch (location.pathname) {
-      case '/':
+      case '/overview':
         setTitle("Overview");
         break;
       case '/unsigned-documents':
@@ -26,6 +28,12 @@ function App() {
         break;
       case '/settings':
         setTitle("Settings");
+        break;
+      case '/signed-documents/:id/employees':
+        setTitle("Signatures");
+        break;
+      case '/view-documents':
+        setTitle("Documents");
         break;
       default:
         setTitle("Overview");
@@ -44,9 +52,11 @@ function App() {
           username={"JEREMIAH MUCHAZONDIDA"}
         />
         <Routes>
-          <Route path='/' element={<OverviewPage />} />
-          <Route path='/unsigned-documents' element={<ProductsPage />} />
+          <Route path='/overview' element={<OverviewPage />} />
+          <Route path='/unsigned-documents' element={<UnsignedDocsPage />} />
           <Route path='/signed-documents' element={<UsersPage />} />
+          <Route path='/signed-documents/:id/employees' element={<SignedEmployees />} />
+          <Route path='/view-documents' element={<ViewDocuments />} />
           <Route path='/settings' element={<SettingsPage />} />
         </Routes>
       </div>

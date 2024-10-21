@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { Search, Trash2, Eye, FileMinus, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { Tooltip, Popconfirm } from 'antd';
-import signedContractService from "../../services/signed-contract.service";
+import { Tooltip, Popconfirm, message } from 'antd';
+import { API_BASE_URL } from "../../../apiConfig";
+import unsignedContractService from "../../../services/unsigned-contract.service";
+import { useNavigate } from "react-router-dom";
 
 const SignedDocsTable = () => {
+	const navigate = useNavigate()
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredDocuments, setFilteredDocuments] = useState([]);
 	const [documents, setDocuments] = useState([]);
@@ -17,15 +19,15 @@ const SignedDocsTable = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const organisation_id = 1
+			const organisation_id = 1;
 			try {
-				const response = await signedContractService.getAllByOrganisationId(organisation_id)
+				const response = await unsignedContractService.getUnsignedContractsWithSignatures(organisation_id);
 				if (response.status !== 200) {
 					setDocuments([]);
 					setFilteredDocuments([]);
 					return;
 				}
-				const data = response.data;
+				const data = response?.data;
 				setDocuments(data);
 				setFilteredDocuments(data);
 			} catch (error) {
@@ -43,9 +45,9 @@ const SignedDocsTable = () => {
 		setSearchTerm(term);
 		const filtered = documents.filter(
 			(document) =>
-				document.unsigned_contract.contract_name.toLowerCase().includes(term) ||
-				document.signee_first_name.toLowerCase().includes(term) ||
-				document.signee_last_name.toLowerCase().includes(term)
+				document.contract_name.toLowerCase().includes(term) ||
+				document.contract_type.toLowerCase().includes(term) ||
+				document.organisation.organisation_name.toLowerCase().includes(term)
 		);
 		setFilteredDocuments(filtered);
 		setCurrentPage(1); // Reset to first page on search
@@ -74,18 +76,23 @@ const SignedDocsTable = () => {
 	};
 
 	const handleView = (attachmentFile) => {
-		const BASE_URL = "http://127.0.0.1:8000";
-		const url = `${BASE_URL}${attachmentFile}`;
+		const url = `${API_BASE_URL}${attachmentFile}`;
 		window.open(url, "_blank");
+	};
+
+	const handleViewEmployees = (id) => {
+		navigate(`/signed-documents/${id}/employees`)
 	};
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`http://127.0.0.1:8000/api/v1/contracts/signed-contracts/${id}/`);
+			await unsignedContractService.delete(id);
+			message.success("Document deleted successfully");
 			setDocuments(documents.filter(doc => doc.id !== id));
 			setFilteredDocuments(filteredDocuments.filter(doc => doc.id !== id));
 		} catch (error) {
 			console.error("Failed to delete document:", error);
+			message.error("Failed to delete document, please try again later")
 		}
 	};
 
@@ -147,16 +154,16 @@ const SignedDocsTable = () => {
 							<thead>
 								<tr>
 									<th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>
+										Organisation
+									</th>
+									<th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>
 										Contract Name
 									</th>
 									<th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>
-										Signee First Name
+										Contract Type
 									</th>
 									<th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>
-										Signee Last Name
-									</th>
-									<th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>
-										Contract Signed Date
+										Contract Upload Date
 									</th>
 									<th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>
 										Actions
@@ -174,36 +181,36 @@ const SignedDocsTable = () => {
 						<thead>
 							<tr>
 								<th
-									onClick={() => requestSort('unsigned_contract.contract_name')}
-									onMouseEnter={() => setHoveredColumn('unsigned_contract.contract_name')}
+									onClick={() => requestSort('organisation.organisation_name')}
+									onMouseEnter={() => setHoveredColumn('organisation.organisation_name')}
 									onMouseLeave={() => setHoveredColumn(null)}
-									className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'unsigned_contract.contract_name' ? 'bg-gray-900' : ''}`}
+									className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'organisation.organisation_name' ? 'bg-gray-900' : ''}`}
 								>
-									Contract Name {getSortArrows('unsigned_contract.contract_name')}
+									Organisation {getSortArrows('organisation.organisation_name')}
 								</th>
 								<th
-									onClick={() => requestSort('signee_first_name')}
-									onMouseEnter={() => setHoveredColumn('signee_first_name')}
+									onClick={() => requestSort('contract_name')}
+									onMouseEnter={() => setHoveredColumn('contract_name')}
 									onMouseLeave={() => setHoveredColumn(null)}
-									className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'signee_first_name' ? 'bg-gray-900' : ''}`}
+									className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'contract_name' ? 'bg-gray-900' : ''}`}
 								>
-									Signee First Name {getSortArrows('signee_first_name')}
+									Contract Name {getSortArrows('contract_name')}
 								</th>
 								<th
-									onClick={() => requestSort('signee_last_name')}
-									onMouseEnter={() => setHoveredColumn('signee_last_name')}
+									onClick={() => requestSort('contract_type')}
+									onMouseEnter={() => setHoveredColumn('contract_type')}
 									onMouseLeave={() => setHoveredColumn(null)}
-									className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'signee_last_name' ? 'bg-gray-900' : ''}`}
+									className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'contract_type' ? 'bg-gray-900' : ''}`}
 								>
-									Signee Last Name {getSortArrows('signee_last_name')}
+									Contract Type {getSortArrows('contract_type')}
 								</th>
 								<th
-									onClick={() => requestSort('contract_signed_date')}
-									onMouseEnter={() => setHoveredColumn('contract_signed_date')}
+									onClick={() => requestSort('contract_upload_date')}
+									onMouseEnter={() => setHoveredColumn('contract_upload_date')}
 									onMouseLeave={() => setHoveredColumn(null)}
-									className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'contract_signed_date' ? 'bg-gray-900' : ''}`}
+									className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'contract_upload_date' ? 'bg-gray-900' : ''}`}
 								>
-									Contract Signed Date {getSortArrows('contract_signed_date')}
+									Contract Upload Date {getSortArrows('contract_upload_date')}
 								</th>
 								<th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>
 									Actions
@@ -222,22 +229,27 @@ const SignedDocsTable = () => {
 									onMouseLeave={() => setHoveredRow(null)}
 									className={`${hoveredRow === index ? 'bg-gray-800' : ''}`}
 								>
-									<td className={`px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 ${hoveredColumn === 'unsigned_contract.contract_name' ? 'bg-gray-900' : ''}`}>
-										{document.unsigned_contract.contract_name}
+									<td className={`px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 ${hoveredColumn === 'organisation.organisation_name' ? 'bg-gray-900' : ''}`}>
+										{document.organisation.organisation_name}
 									</td>
-									<td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-300 ${hoveredColumn === 'signee_first_name' ? 'bg-gray-900' : ''}`}>
-										{document.signee_first_name}
+									<td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-300 ${hoveredColumn === 'contract_name' ? 'bg-gray-900' : ''}`}>
+										{document.contract_name}
 									</td>
-									<td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-300 ${hoveredColumn === 'signee_last_name' ? 'bg-gray-900' : ''}`}>
-										{document.signee_last_name}
+									<td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-300 ${hoveredColumn === 'contract_type' ? 'bg-gray-900' : ''}`}>
+										{document.contract_type}
 									</td>
-									<td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-300 ${hoveredColumn === 'contract_signed_date' ? 'bg-gray-900' : ''}`}>
-										{new Date(document.contract_signed_date).toLocaleDateString()}
+									<td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-300 ${hoveredColumn === 'contract_upload_date' ? 'bg-gray-900' : ''}`}>
+										{new Date(document.contract_upload_date).toLocaleDateString()}
 									</td>
 									<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-										<Tooltip color="#108ee9" placement="topRight" title="View Document">
-											<button className='text-green-400 hover:text-green-200' onClick={() => handleView(document.signed_contract_attachment_file)}>
-												<Eye size={18} />
+										<Tooltip color="#108ee9" placement="topRight" title="View employees who signed">
+											<button className='text-green-400 hover:text-green-200' onClick={() => handleViewEmployees(document.id)}>
+												<Eye size={19} />
+											</button>
+										</Tooltip>
+										<Tooltip className="ml-2" color="#108ee9" placement="topRight" title="View Document">
+											<button className='text-blue-400 hover:text-green-200' onClick={() => handleView(document.contract_attachment_file)}>
+												<Eye size={19} />
 											</button>
 										</Tooltip>
 										<Tooltip color="#108ee9" placement="topRight" title="Delete Document">
