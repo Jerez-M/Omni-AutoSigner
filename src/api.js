@@ -1,21 +1,20 @@
 import axios from "axios";
-import authHeader from "./services/auth-header.js";
-
-export const apiUrl = "http://127.0.0.1:8000/api/v1/";
+// import authHeader from "./services/auth-header.js";
+import { API_URL } from "./apiConfig.js";
 
 const instance = axios.create({
-    baseURL: apiUrl,
+    baseURL: API_URL,
     headers: {
         "Content-Type": "application/json",
-        ...authHeader()
+        // ...authHeader()
     },
 })
 
 export const formsRequestInstance = axios.create({
-    baseURL: apiUrl,
+    baseURL: API_URL,
     headers: {
         "Content-Type": "multipart/form-data",
-        ...authHeader()
+        // ...authHeader()
     },
 })
 

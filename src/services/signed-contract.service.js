@@ -20,6 +20,10 @@ class SignedContract {
     update(data, id) {
         return instance.putForm(`contracts/signed-contracts/update/${id}`, data)
     }
+
+    delete(id) {
+        return instance.delete(`contracts/signed-contracts/${id}/`)
+    }
 }
 
 export default new SignedContract();

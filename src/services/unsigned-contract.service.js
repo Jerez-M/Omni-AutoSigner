@@ -15,6 +15,10 @@ class UnsignedContract {
     update(data, id) {
         return instance.putForm(`contracts/unsigned-contracts/update/${id}`, data)
     }
+
+    delete(id) {
+        return instance.delete(`contracts/unsigned-contracts/${id}/`)
+    }
 }
 
 export default new UnsignedContract();

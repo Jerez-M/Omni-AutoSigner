@@ -3,6 +3,7 @@ import { Search, Trash2, Eye, FileMinus, ChevronLeft, ChevronRight } from "lucid
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Tooltip, Popconfirm } from 'antd';
+import signedContractService from "../../services/signed-contract.service";
 
 const SignedDocsTable = () => {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -16,8 +17,9 @@ const SignedDocsTable = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
+			const organisation_id = 1
 			try {
-				const response = await axios.get("http://127.0.0.1:8000/api/v1/contracts/signed-contracts/get-all-by-organisation-id/1/");
+				const response = await signedContractService.getAllByOrganisationId(organisation_id)
 				if (response.status !== 200) {
 					setDocuments([]);
 					setFilteredDocuments([]);
