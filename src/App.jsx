@@ -9,6 +9,10 @@ import Header from "./components/common/Header";
 import "./App.css";
 import SignedEmployees from "./pages/admin/signedDocuments/SignedEmployeesPage";
 import ViewDocuments from "./pages/user/ViewDocument";
+import LoginPage from "./pages/auth/Login";
+import authService from "./services/auth.service";
+import UnauthorizedAccessErrorPage from "./components/common/UnauthorizedAccessErrorPage";
+import LandingPage from "./pages/auth/LandingPage";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -40,24 +44,34 @@ function App() {
     }
   }, [location]);
 
+  const isLoginPage = location.pathname === '/admin/login';
+  const isLandingPage = location.pathname === '/';
+  const shouldShowSidebarAndHeader = !isLoginPage && !isLandingPage;
+
   return (
     <div className='flex h-screen bg-gray-900 text-gray-100'>
-      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-      <div className={`flex-1 pt-20 overflow-auto scrollable hide-scrollbar ${isSidebarOpen ? 'ml-0' : 'ml-0'}`}>
-        <Header
-          title={title}
-          isSidebarOpen={isSidebarOpen}
-          onProfileClick={() => { }}
-          onLogout={() => { }}
-          username={"JEREMIAH MUCHAZONDIDA"}
-        />
+      {shouldShowSidebarAndHeader && (
+        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      )}
+      <div className={`flex-1 ${shouldShowSidebarAndHeader ? 'pt-20' : ''} overflow-auto scrollable hide-scrollbar ${isSidebarOpen && shouldShowSidebarAndHeader ? 'ml-0' : 'ml-0'}`}>
+        {shouldShowSidebarAndHeader && (
+          <Header
+            title={title}
+            isSidebarOpen={isSidebarOpen}
+            onProfileClick={() => { }}
+            onLogout={() => { }}
+            username={authService.getUsername()}
+          />
+        )}
         <Routes>
-          <Route path='/overview' element={<OverviewPage />} />
-          <Route path='/unsigned-documents' element={<UnsignedDocsPage />} />
-          <Route path='/signed-documents' element={<UsersPage />} />
-          <Route path='/signed-documents/:id/employees' element={<SignedEmployees />} />
+          <Route path='/admin/login' element={<LoginPage />} />
+          <Route path='/' element={<LandingPage />} />
+          <Route path='/overview' element={authService.getUserRole() === "ADMIN" ? <OverviewPage /> : <UnauthorizedAccessErrorPage />} />
+          <Route path='/unsigned-documents' element={authService.getUserRole() === "ADMIN" ? <UnsignedDocsPage /> : <UnauthorizedAccessErrorPage />} />
+          <Route path='/signed-documents' element={authService.getUserRole() === "ADMIN" ? <UsersPage /> : <UnauthorizedAccessErrorPage />} />
+          <Route path='/signed-documents/:id/employees' element={authService.getUserRole() === "ADMIN" ? <SignedEmployees /> : <UnauthorizedAccessErrorPage />} />
           <Route path='/view-documents' element={<ViewDocuments />} />
-          <Route path='/settings' element={<SettingsPage />} />
+          <Route path='/settings' element={authService.getUserRole() === "ADMIN" ? <SettingsPage /> : <UnauthorizedAccessErrorPage />} />
         </Routes>
       </div>
     </div>

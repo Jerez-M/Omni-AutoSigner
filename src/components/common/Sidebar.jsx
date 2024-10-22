@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import logo from './../../assets/omni-logo.png';
 import PropTypes from "prop-types";
 import { useState } from "react";
+import authService from "../../services/auth.service";
 
 const SIDEBAR_ITEMS = [
-	{ name: "Overview", icon: BarChart2, color: "#dc2626", href: "/" },
+	{ name: "Overview", icon: BarChart2, color: "#dc2626", href: "/overview" },
 	{ name: "Unsigned Documents", icon: ShoppingBag, color: "#8B5CF6", href: "/unsigned-documents" },
 	{ name: "Signed Documents", icon: ClipboardPen, color: "#EC4899", href: "/signed-documents" },
 	{ name: "Settings", icon: Settings, color: "#6EE7B7", href: "/settings" },
@@ -18,6 +19,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 	const handleItemClick = (href) => {
 		setSelectedItem(href);
 	};
+
+	if (authService.getUserRole() !== "ADMIN") {
+		return null; // Return null if the user is not an admin
+	}
 
 	return (
 		<motion.div

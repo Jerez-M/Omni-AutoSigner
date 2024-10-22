@@ -1,9 +1,10 @@
-import instance, { apiUrl } from "../api";
+import instance from "../api";
 import { jwtDecode } from "jwt-decode";
+import { API_URL } from "../apiConfig";
 
 class AuthenticationService {
     login(data) {
-        return instance.post(`${apiUrl}accounts/token/`, data)
+        return instance.post(`${API_URL}accounts/token/`, data)
     }
 
     verifyPassword(data) {
@@ -24,7 +25,7 @@ class AuthenticationService {
 
     logout() {
         localStorage.removeItem('user');
-        window.location.href = '/';
+        window.location.href = '/admin/login';
     }
 
     getCurrentUser() {
