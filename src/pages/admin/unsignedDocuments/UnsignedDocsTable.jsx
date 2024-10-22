@@ -2,9 +2,10 @@ import { motion } from "framer-motion";
 import { Edit, Search, Trash2, FileMinus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
-import axios from "axios";
 import { Tooltip, Popconfirm } from 'antd';
 import EditUnsignedDoc from './EditUnsignedDoc';
+import unsignedContractService from "../../../services/unsigned-contract.service";
+import { API_BASE_URL } from "../../../apiConfig";
 
 const UnsignedDocsTable = () => {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -16,12 +17,13 @@ const UnsignedDocsTable = () => {
 	const [selectedDocument, setSelectedDocument] = useState(null);
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [documentsPerPage] = useState(10); // Number of documents per page
+	const [documentsPerPage] = useState(10);
 
 	useEffect(() => {
 		const fetchData = async () => {
+			const organisation_id = 1;
 			try {
-				const response = await axios.get("http://127.0.0.1:8000/api/v1/contracts/unsigned-contracts/get-all-by-organisation-id/1/");
+				const response = await unsignedContractService.getAllByOrganisationId(organisation_id)
 				if (response.status === 200) {
 					const data = response.data;
 					setDocuments(data);
@@ -85,14 +87,13 @@ const UnsignedDocsTable = () => {
 	};
 
 	const handleView = (attachmentFile) => {
-		const BASE_URL = "http://127.0.0.1:8000";
-		const url = `${BASE_URL}${attachmentFile}`;
+		const url = `${API_BASE_URL}${attachmentFile}`;
 		window.open(url, "_blank");
 	};
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`http://127.0.0.1:8000/api/v1/contracts/unsigned-contracts/${id}/`);
+			await unsignedContractService.delete(id);
 			setDocuments(documents.filter(doc => doc.id !== id));
 			setFilteredDocuments(filteredDocuments.filter(doc => doc.id !== id));
 		} catch (error) {
@@ -225,9 +226,14 @@ const UnsignedDocsTable = () => {
 										{new Date(document.contract_upload_date).toLocaleDateString()}
 									</td>
 									<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+										<Tooltip color="#108ee9" placement="topRight" title="View Document">
+											<button className='text-green-400 hover:text-green-200 mr-2' onClick={() => handleView(document.contract_attachment_file)}>
+												<Eye size={19} />
+											</button>
+										</Tooltip>
 										<Tooltip color="#108ee9" placement="topRight" title="Edit Document">
 											<button className='text-indigo-400 hover:text-indigo-300 mr-2' onClick={() => handleEdit(document)}>
-												<Edit size={18} />
+												<Edit size={19} />
 											</button>
 										</Tooltip>
 										<Tooltip color="#108ee9" placement="topRight" title="Delete Document">
@@ -242,11 +248,6 @@ const UnsignedDocsTable = () => {
 													<Trash2 size={18} />
 												</button>
 											</Popconfirm>
-										</Tooltip>
-										<Tooltip color="#108ee9" placement="topRight" title="View Document">
-											<button className='text-green-400 hover:text-green-200' onClick={() => handleView(document.contract_attachment_file)}>
-												<Eye size={18} />
-											</button>
 										</Tooltip>
 									</td>
 								</motion.tr>

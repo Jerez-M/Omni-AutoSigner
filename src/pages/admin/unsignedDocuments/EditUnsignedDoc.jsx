@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Input, Modal, Space, Upload, message, AutoComplete } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import axios from "axios";
+import unsignedContractService from '../../../services/unsigned-contract.service';
 
 const documentTypes = [
     'Policy',
@@ -45,10 +45,11 @@ const EditUnsignedDoc = ({ isModalOpen, handleClose, document }) => {
 
         try {
             setLoading(true);
-            const response = await axios.put(`"http://127.0.0.1:8000/api/v1/contracts/unsigned-contracts/update/${document.id}/`, formData);
-            if (response.ok) {
+            const id = document.id
+            const response = await unsignedContractService.update(id, formData)
+            if (response.status == 200) {
                 message.success('Document updated successfully!');
-                handleClose(); // Close modal after success
+                handleClose();
             } else {
                 message.error('Failed to update document.');
             }

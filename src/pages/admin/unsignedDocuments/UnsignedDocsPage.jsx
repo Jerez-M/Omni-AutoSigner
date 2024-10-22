@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import UnsignedDocsTable from "../../../components/unsignedDocs/UnsignedDocsTable";
+import UnsignedDocsTable from "./UnsignedDocsTable";
 import AddUnsignedDoc from "./AddUnsignedDoc";
 
 const UnsignedDocsPage = () => {
