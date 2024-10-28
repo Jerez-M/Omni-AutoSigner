@@ -5,8 +5,10 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 import { Tooltip } from 'antd';
 import unsignedContractService from "../../services/unsigned-contract.service";
 import { API_BASE_URL } from "../../apiConfig";
+import { useNavigate } from "react-router-dom";
 
 const ViewDocument = () => {
+    const navigate = useNavigate()
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredDocuments, setFilteredDocuments] = useState([]);
 	const [documents, setDocuments] = useState([]);
@@ -76,6 +78,7 @@ const ViewDocument = () => {
 	const handleView = (attachmentFile) => {
 		const url = `${API_BASE_URL}${attachmentFile}`;
 		window.open(url, "_blank");
+        navigate("/pdf-editor")
 	};
 
 	// Pagination logic
