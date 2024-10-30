@@ -4,8 +4,32 @@ import { motion } from "framer-motion";
 import StatCard from "../../components/common/StatCard";
 import SalesOverviewChart from "../../components/overview/OverviewChart";
 import CategoryDistributionChart from "../../components/overview/CategoryDistributionChart";
+import { useEffect, useState } from "react";
+import signedContractService from "../../services/signed-contract.service";
+import authService from "../../services/auth.service";
 
 const OverviewPage = () => {
+	const [contractStats, setContractStats] = useState([]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const organisation_id = authService.getUserOrganisationId()
+			console.log("org id: ", organisation_id)
+			try {
+				const response = await signedContractService.getContractStats(organisation_id);
+				if (response.status !== 200) {
+					setContractStats([]);
+					return;
+				}
+				setContractStats(response?.data);
+			} catch (error) {
+				console.error("Failed to fetch data:", error);
+				setContractStats([]);
+			}
+		};
+
+		fetchData();
+	}, []);
 	return (
 		<div className='flex-1 overflow-auto relative z-10'>
 			{/* <Header title='Overview' /> */}
@@ -18,15 +42,17 @@ const OverviewPage = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1 }}
 				>
-					<StatCard name='Total Signed' icon={FilePenLine} value='345' color='#6366F1' />
-					<StatCard name='Total Unsigned' icon={FileCheck} value='34' color='#8B5CF6' />
+					<StatCard name='Total Docs' icon={FilePenLine} value={contractStats.total_contracts} color='#6366F1' />
+					<StatCard name='Total Unsigned Docs' icon={FileCheck} value={contractStats.total_unsigned_contracts} color='#8B5CF6' />
+					<StatCard name='Total Signed Docs' icon={FilePenLine} value={contractStats.total_signed_contracts} color='#6366F1' />
+					<StatCard name='Total Signatures' icon={FilePenLine} value={contractStats.total_signatures} color='#6366F1' />
 				</motion.div>
 
 				{/* CHARTS */}
 
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
 					<SalesOverviewChart />
-					<CategoryDistributionChart />
+					<CategoryDistributionChart signedPercentage={contractStats.signed_percentage} unSignedPercentage={contractStats.unsigned_percentage}/>
 				</div>
 			</main>
 		</div>
