@@ -1,14 +1,14 @@
+import PropTypes from 'prop-types';
 import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
-const categoryData = [
-	{ name: "Signed", value: 500 },
-	{ name: "Unsigned", value: 200 },
-];
+const CategoryDistributionChart = ({ signedPercentage, unSignedPercentage }) => {
+	const categoryData = [
+		{ name: "Signed", value: signedPercentage },
+		{ name: "Unsigned", value: unSignedPercentage },
+	];
 
-const COLORS = ["#6366F1", "#8B5CF6"];
-
-const CategoryDistributionChart = () => {
+	const COLORS = ["#6366F1", "#8B5CF6"];
 	return (
 		<motion.div
 			className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700'
@@ -48,4 +48,9 @@ const CategoryDistributionChart = () => {
 		</motion.div>
 	);
 };
+CategoryDistributionChart.propTypes = {
+	signedPercentage: PropTypes.number.isRequired,
+	unSignedPercentage: PropTypes.number.isRequired,
+};
+
 export default CategoryDistributionChart;
