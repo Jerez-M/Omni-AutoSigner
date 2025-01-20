@@ -3,6 +3,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { Document, Page, pdfjs } from 'react-pdf';
+import pdfDocument from "../assets/modified_document.pdf";
+
 // import DummyPdf from './modified_document.pdf'
 // import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 // import pdfjsWorker from "react-pdf/node_modules/pdfjs-dist/build/pdf.worker.entry";
@@ -31,7 +33,7 @@ const PdfEditor = () => {
             if (pdfUrl) {
                 const existingPdfBytes = await fetch(pdfUrl).then(res => res.arrayBuffer());
                 const loadedPdf = await PDFDocument.load(existingPdfBytes);
-                setPdfDoc(loadedPdf);
+                setPdfDoc(pdfDocument);
                 setPdfBytes(existingPdfBytes);
             }
         };
@@ -121,7 +123,7 @@ const PdfEditor = () => {
                 {/* Display the PDF */}
                 {pdfBytes && (
                     <Document
-                        file={pdfBytes}
+                        file={pdfDocument}
                         onLoadSuccess={onDocumentLoadSuccess}
                     >
                         {/* Render all pages of the PDF */}
