@@ -76,10 +76,15 @@ const ViewDocument = () => {
     };
 
     const handleView = (attachmentFile) => {
+<<<<<<< HEAD
         // Construct the full URL of the PDF file for viewing/editing
         const pdfUrl = `${API_BASE_URL}${attachmentFile}`;
         // Navigate to the PdfEditor component with the URL of the selected PDF
         navigate('/pdf-editor', { state: { pdfUrl } });
+=======
+        const url = `${API_BASE_URL}${attachmentFile}`;
+        navigate('/pdf-editor', { state: { pdfUrl: url } }); // Use pdfUrl for clarity
+>>>>>>> 8e616fe9409b09b8fa935b1209bc1ec54dd57e13
     };
 
     // Pagination logic
@@ -118,18 +123,81 @@ const ViewDocument = () => {
 
             <div className='overflow-x-auto'>
                 {filteredDocuments.length === 0 ? (
+<<<<<<< HEAD
                     <div className="flex flex-col items-center justify-center h-48">
                         <FileMinus size={40} className="text-gray-400 mb-2" />
                         <p className="text-gray-300">No Data</p>
                     </div>
+=======
+                    <>
+                        <table className='min-w-full divide-y divide-gray-700'>
+                            <thead>
+                                <tr>
+                                    <th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>Contract Name</th>
+                                    <th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>Contract Type</th>
+                                    <th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>Organisation</th>
+                                    <th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>Upload Date</th>
+                                    <th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>Actions</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div className="flex flex-col items-center justify-center h-48">
+                            <FileMinus size={40} className="text-gray-400 mb-2" />
+                            <p className="text-gray-300">No Data</p>
+                        </div>
+                    </>
+>>>>>>> 8e616fe9409b09b8fa935b1209bc1ec54dd57e13
                 ) : (
                     <table className='min-w-full divide-y divide-gray-700'>
                         <thead>
                             <tr>
+<<<<<<< HEAD
                                 <th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>Contract Name</th>
                                 <th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>Contract Type</th>
                                 <th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>Organisation</th>
                                 <th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>Upload Date</th>
+=======
+                                <th
+                                    onClick={() => requestSort('contract_name')}
+                                    onMouseEnter={() => setHoveredColumn('contract_name')}
+                                    onMouseLeave={() => setHoveredColumn(null)}
+                                    className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'contract_name' ? 'bg-gray-900' : ''}`}
+                                >
+                                    Contract Name
+                                    <ArrowUp size={16} className={`inline ml-1 ${sortConfig.key === 'contract_name' && sortConfig.direction === 'ascending' ? 'text-blue-500' : 'text-gray-400'}`} />
+                                    <ArrowDown size={16} className={`inline ml-1 ${sortConfig.key === 'contract_name' && sortConfig.direction === 'descending' ? 'text-blue-500' : 'text-gray-400'}`} />
+                                </th>
+                                <th
+                                    onClick={() => requestSort('contract_type')}
+                                    onMouseEnter={() => setHoveredColumn('contract_type')}
+                                    onMouseLeave={() => setHoveredColumn(null)}
+                                    className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'contract_type' ? 'bg-gray-900' : ''}`}
+                                >
+                                    Contract Type
+                                    <ArrowUp size={16} className={`inline ml-1 ${sortConfig.key === 'contract_type' && sortConfig.direction === 'ascending' ? 'text-blue-500' : 'text-gray-400'}`} />
+                                    <ArrowDown size={16} className={`inline ml-1 ${sortConfig.key === 'contract_type' && sortConfig.direction === 'descending' ? 'text-blue-500' : 'text-gray-400'}`} />
+                                </th>
+                                <th
+                                    onClick={() => requestSort('organisation.organisation_name')}
+                                    onMouseEnter={() => setHoveredColumn('organisation.organisation_name')}
+                                    onMouseLeave={() => setHoveredColumn(null)}
+                                    className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'organisation.organisation_name' ? 'bg-gray-900' : ''}`}
+                                >
+                                    Organisation
+                                    <ArrowUp size={16} className={`inline ml-1 ${sortConfig.key === 'organisation.organisation_name' && sortConfig.direction === 'ascending' ? 'text-blue-500' : 'text-gray-400'}`} />
+                                    <ArrowDown size={16} className={`inline ml-1 ${sortConfig.key === 'organisation.organisation_name' && sortConfig.direction === 'descending' ? 'text-blue-500' : 'text-gray-400'}`} />
+                                </th>
+                                <th
+                                    onClick={() => requestSort('contract_upload_date')}
+                                    onMouseEnter={() => setHoveredColumn('contract_upload_date')}
+                                    onMouseLeave={() => setHoveredColumn(null)}
+                                    className={`cursor-pointer px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider ${hoveredColumn === 'contract_upload_date' ? 'bg-gray-900' : ''}`}
+                                >
+                                    Upload Date
+                                    <ArrowUp size={16} className={`inline ml-1 ${sortConfig.key === 'contract_upload_date' && sortConfig.direction === 'ascending' ? 'text-blue-500' : 'text-gray-400'}`} />
+                                    <ArrowDown size={16} className={`inline ml-1 ${sortConfig.key === 'contract_upload_date' && sortConfig.direction === 'descending' ? 'text-blue-500' : 'text-gray-400'}`} />
+                                </th>
+>>>>>>> 8e616fe9409b09b8fa935b1209bc1ec54dd57e13
                                 <th className='px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider'>Actions</th>
                             </tr>
                         </thead>
@@ -145,6 +213,7 @@ const ViewDocument = () => {
                                     onMouseLeave={() => setHoveredRow(null)}
                                     className={`${hoveredRow === index ? 'bg-gray-800' : ''}`}
                                 >
+<<<<<<< HEAD
                                     <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
                                         {document.contract_name}
                                     </td>
@@ -155,14 +224,30 @@ const ViewDocument = () => {
                                         {document.organisation.organisation_name}
                                     </td>
                                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+=======
+                                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 ${hoveredColumn === 'contract_name' ? 'bg-gray-800' : ''}`}>
+                                        {document.contract_name}
+                                    </td>
+                                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-300 ${hoveredColumn === 'contract_type' ? 'bg-gray-800' : ''}`}>
+                                        {document.contract_type}
+                                    </td>
+                                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-300 ${hoveredColumn === 'organisation.organisation_name' ? 'bg-gray-800' : ''}`}>
+                                        {document.organisation.organisation_name}
+                                    </td>
+                                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-300 ${hoveredColumn === 'contract_upload_date' ? 'bg-gray-800' : ''}`}>
+>>>>>>> 8e616fe9409b09b8fa935b1209bc1ec54dd57e13
                                         {new Date(document.contract_upload_date).toLocaleDateString()}
                                     </td>
                                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                                         <Tooltip color="#108ee9" placement="topRight" title="View Document">
+<<<<<<< HEAD
                                             <button
                                                 className='text-green-400 hover:text-green-200 mr-2'
                                                 onClick={() => handleView(document.contract_attachment_file)}
                                             >
+=======
+                                            <button className='text-green-400 hover:text-green-200 mr-2' onClick={() => handleView(document.contract_attachment_file)}>
+>>>>>>> 8e616fe9409b09b8fa935b1209bc1ec54dd57e13
                                                 <Eye size={19} />
                                             </button>
                                         </Tooltip>

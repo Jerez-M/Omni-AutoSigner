@@ -12,6 +12,7 @@ import ViewDocuments from "./pages/user/ViewDocument";
 import PdfEditor from "./components/PdfEditor";
 import LoginPage from "./pages/auth/Login";
 import UnauthorizedAccessErrorPage from "./components/common/UnauthorizedAccessErrorPage";
+<<<<<<< HEAD
 import LandingPage from "./pages/auth/LandingPage"; // Ensure correct path
 import authService from "./services/auth.service";
 import "./App.css";
@@ -68,10 +69,56 @@ function App() {
                     isSidebarOpen && shouldShowSidebarAndHeader ? "ml-0" : "ml-0"
                 }`}
             >
+=======
+import LandingPage from "./pages/auth/LandingPage";
+import PdfEditor from "./pages/user/PdfEditor";
+
+function App() {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [title, setTitle] = useState("Overview");
+    const location = useLocation();
+
+    useEffect(() => {
+        switch (location.pathname) {
+            case '/overview':
+                setTitle("Overview");
+                break;
+            case '/unsigned-documents':
+                setTitle("Unsigned Documents");
+                break;
+            case '/signed-documents':
+                setTitle("Signed Documents");
+                break;
+            case '/settings':
+                setTitle("Settings");
+                break;
+            case '/signed-documents/:id/employees':
+                setTitle("Signatures");
+                break;
+            case '/view-documents':
+                setTitle("Documents");
+                break;
+            default:
+                setTitle("Overview");
+        }
+    }, [location]);
+
+    const isLoginPage = location.pathname === '/admin/login';
+    const isLandingPage = location.pathname === '/';
+    const shouldShowSidebarAndHeader = !isLoginPage && !isLandingPage;
+
+    return (
+        <div className='flex h-screen bg-gray-900 text-gray-100'>
+            {shouldShowSidebarAndHeader && (
+                <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+            )}
+            <div className={`flex-1 ${shouldShowSidebarAndHeader ? 'pt-20' : ''} overflow-auto scrollable hide-scrollbar ${isSidebarOpen && shouldShowSidebarAndHeader ? 'ml-0' : 'ml-0'}`}>
+>>>>>>> 8e616fe9409b09b8fa935b1209bc1ec54dd57e13
                 {shouldShowSidebarAndHeader && (
                     <Header
                         title={title}
                         isSidebarOpen={isSidebarOpen}
+<<<<<<< HEAD
                         onProfileClick={() => {}}
                         onLogout={() => authService.logout()}
                         username={authService.getUsername()}
@@ -134,6 +181,23 @@ function App() {
                             )
                         }
                     />
+=======
+                        onProfileClick={() => { }}
+                        onLogout={() => { }}
+                        username={authService.getUsername()}
+                    />
+                )}
+                <Routes>
+                    <Route path='/admin/login' element={<LoginPage />} />
+                    <Route path='/' element={<LandingPage />} />
+                    <Route path='/overview' element={authService.getUserRole() === "ADMIN" ? <OverviewPage /> : <UnauthorizedAccessErrorPage />} />
+                    <Route path='/unsigned-documents' element={authService.getUserRole() === "ADMIN" ? <UnsignedDocsPage /> : <UnauthorizedAccessErrorPage />} />
+                    <Route path='/signed-documents' element={authService.getUserRole() === "ADMIN" ? <UsersPage /> : <UnauthorizedAccessErrorPage />} />
+                    <Route path='/signed-documents/:id/employees' element={authService.getUserRole() === "ADMIN" ? <SignedEmployees /> : <UnauthorizedAccessErrorPage />} />
+                    <Route path='/view-documents' element={<ViewDocuments />} />
+                    <Route path='/pdf-editor' element={<PdfEditor />} />
+                    <Route path='/settings' element={authService.getUserRole() === "ADMIN" ? <SettingsPage /> : <UnauthorizedAccessErrorPage />} />
+>>>>>>> 8e616fe9409b09b8fa935b1209bc1ec54dd57e13
                 </Routes>
             </div>
         </div>

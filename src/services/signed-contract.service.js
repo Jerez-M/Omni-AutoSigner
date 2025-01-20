@@ -13,6 +13,10 @@ class SignedContract {
         return instance.get(`contracts/signed-contracts/get-all-by-organisation-id/${organisation_id}/`)
     }
 
+    getContractStats(organisation_id) {
+        return instance.get(`contracts/get-all-stats-by-organisation-id/${organisation_id}/`)
+    }
+
     getAllByUnsignedContractId(id) {
         return instance.get(`contracts/signed-contracts/get-by-unsigned-contract-id/${id}/`)
     }
